@@ -41,15 +41,20 @@ class HomePage extends StatelessWidget {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              // final user = FirebaseAuth.instance.currentUser;
-              // if (user?.emailVerified ?? false) {
-              // } else {
-              //   return const VerifyEmailView();
-              // }
-              // return const Text("Done");
-              return const LoginView();
+              final user = FirebaseAuth.instance.currentUser;
+              if (user != null) {
+                if (user.emailVerified) {
+                  return const NotesView();
+                } else {
+                  return const VerifyEmailView();
+                }
+              } else {
+                return const LoginView();
+              }
+
+              return const Text("Done");
             default:
-              return const Text('Loading');
+              return const CircularProgressIndicator();
           }
         },
       ),
@@ -73,6 +78,39 @@ class VerifyEmailView extends StatelessWidget {
           child: const Text("Send email verification"),
         )
       ],
+    );
+  }
+}
+
+enum MenuAction { logout }
+
+class NotesView extends StatefulWidget {
+  const NotesView({Key? key}) : super(key: key);
+
+  @override
+  State<NotesView> createState() => _NotesViewState();
+}
+
+class _NotesViewState extends State<NotesView> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Center(
+          child: Text("Main UI"),
+        ),
+        actions: [
+          PopupMenuButton<MenuAction>(
+            onSelected: (value) {},
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem(
+                    value: MenuAction.logout, child: Text("Log Out"))
+              ];
+            },
+          )
+        ],
+      ),
     );
   }
 }
