@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:thirtysevenhours/routes/routes.dart';
 import 'package:thirtysevenhours/views/login.dart';
 import 'package:thirtysevenhours/views/register.dart';
 import 'firebase_options.dart';
@@ -23,9 +24,9 @@ class MyApp extends StatelessWidget {
         ),
         home: const HomePage(),
         routes: {
-          '/login/': (context) => const LoginView(),
-          '/register/': (context) => const RegisterView(),
-          '/notes/': (context) => const NotesView(),
+          LoginRoute: (context) => const LoginView(),
+          RegisterRoute: (context) => const RegisterView(),
+          NotesRoute: (context) => const NotesView(),
         });
   }
 }
@@ -151,4 +152,23 @@ Future<bool> showLogOutDialog(BuildContext context) {
           ],
         );
       }).then((value) => value ?? false);
+}
+
+Future<void> showErrorDialog(
+  BuildContext context,
+  String text,
+) {
+  return showDialog(context: context, builder: (context) {
+    return AlertDialog(
+      title: const Text('Error Occured'),
+      content: Text(text),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+        }, 
+        child: const Text('OK'),),
+      ],
+    )
+  })
 }
