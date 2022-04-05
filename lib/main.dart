@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:thirtysevenhours/routes/routes.dart';
+import 'package:thirtysevenhours/utilities/logoutDialog.dart';
 import 'package:thirtysevenhours/views/login.dart';
 import 'package:thirtysevenhours/views/register.dart';
+import 'package:thirtysevenhours/views/verifiedemail.dart';
 import 'firebase_options.dart';
 import 'dart:developer' show log;
 
@@ -27,6 +29,7 @@ class MyApp extends StatelessWidget {
           LoginRoute: (context) => const LoginView(),
           RegisterRoute: (context) => const RegisterView(),
           NotesRoute: (context) => const NotesView(),
+          VerifyEmailRoute: (context) => const VerifyEmailView(),
         });
   }
 }
@@ -61,26 +64,6 @@ class HomePage extends StatelessWidget {
           }
         },
       ),
-    );
-  }
-}
-
-class VerifyEmailView extends StatelessWidget {
-  const VerifyEmailView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text("Please Verify your Email"),
-        TextButton(
-          onPressed: () async {
-            final user = FirebaseAuth.instance.currentUser;
-            await user?.sendEmailVerification();
-          },
-          child: const Text("Send email verification"),
-        )
-      ],
     );
   }
 }
@@ -129,46 +112,4 @@ class _NotesViewState extends State<NotesView> {
       ),
     );
   }
-}
-
-Future<bool> showLogOutDialog(BuildContext context) {
-  return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Sign Out'),
-          content: const Text('Do you want to sign out?'),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: const Text('Cancel')),
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: const Text('Sign Out')),
-          ],
-        );
-      }).then((value) => value ?? false);
-}
-
-Future<void> showErrorDialog(
-  BuildContext context,
-  String text,
-) {
-  return showDialog(context: context, builder: (context) {
-    return AlertDialog(
-      title: const Text('Error Occured'),
-      content: Text(text),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-        }, 
-        child: const Text('OK'),),
-      ],
-    )
-  })
 }
