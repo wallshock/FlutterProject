@@ -1,10 +1,12 @@
 import 'package:thirtysevenhours/services/authUser.dart';
 import 'package:thirtysevenhours/services/authprovider.dart';
+import 'package:thirtysevenhours/services/firebaseAuthProvider.dart';
 
 class AuthService implements AuthProvider {
   final AuthProvider provider;
   const AuthService(this.provider);
 
+  factory AuthService.firebase() => AuthService(FirebaseAuthProvider());
   @override
   Future<AuthUser?> createUser({
     required String email,
@@ -22,14 +24,11 @@ class AuthService implements AuthProvider {
       provider.logIn(email: email, password: password);
 
   @override
-  Future<void> logOut() {
-    // TODO: implement logOut
-    throw UnimplementedError();
-  }
+  Future<void> logOut() => provider.logOut();
 
   @override
-  Future<void> sendEmailVerification() {
-    // TODO: implement sendEmailVerification
-    throw UnimplementedError();
-  }
+  Future<void> sendEmailVerification() => provider.sendEmailVerification();
+
+  @override
+  Future<void> initialize() => provider.initialize();
 }
